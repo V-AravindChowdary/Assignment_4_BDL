@@ -1,0 +1,100 @@
+schema: '2.0'
+stages:
+  download_data:
+    cmd: python3 download.py
+    deps:
+    - path: download.py
+      hash: md5
+      md5: 85391d7d508a6a116af877808aea6ed8
+      size: 2058
+    params:
+      params.yaml:
+        data_source.base_url: https://www.ncei.noaa.gov/data/local-climatological-data/access/
+        data_source.max_files: 3
+        data_source.output: /home/koushik/Documents/BDL_ASSGN_4/Climate_dataset{year}.html
+        data_source.temp_dir: /home/koushik/Documents/BDL_ASSGN_4/data
+        data_source.year: 2023
+    outs:
+    - path: data
+      hash: md5
+      md5: 21e77901cab27137ea1e7536c78a621a.dir
+      size: 143736330
+      nfiles: 3
+  prepare:
+    cmd: python3 prepare.py
+    deps:
+    - path: data
+      hash: md5
+      md5: 21e77901cab27137ea1e7536c78a621a.dir
+      size: 143736330
+      nfiles: 3
+    - path: prepare.py
+      hash: md5
+      md5: 5702f2a7fbefa4e0a8b935a56a3bedb7
+      size: 1728
+    params:
+      params.yaml:
+        data_prepare.dest_folder: /home/koushik/Documents/BDL_ASSGN_4/prepare_data
+        data_source.temp_dir: /home/koushik/Documents/BDL_ASSGN_4/data
+    outs:
+    - path: prepare_data
+      hash: md5
+      md5: 3fea027a50aba52e1d495eddfad47dd4.dir
+      size: 8793
+      nfiles: 6
+  process:
+    cmd: python3 process.py
+    deps:
+    - path: data
+      hash: md5
+      md5: 21e77901cab27137ea1e7536c78a621a.dir
+      size: 143736330
+      nfiles: 3
+    - path: prepare_data
+      hash: md5
+      md5: 3fea027a50aba52e1d495eddfad47dd4.dir
+      size: 8793
+      nfiles: 6
+    - path: process.py
+      hash: md5
+      md5: 006aee7d4f011a4d801de3914828b840
+      size: 2543
+    params:
+      params.yaml:
+        data_prepare.dest_folder: /home/koushik/Documents/BDL_ASSGN_4/prepare_data
+        data_process.dest_folder: /home/koushik/Documents/BDL_ASSGN_4/process_data
+        data_source.temp_dir: /home/koushik/Documents/BDL_ASSGN_4/data
+    outs:
+    - path: process_data
+      hash: md5
+      md5: 9c1b10a94b88712f482c014d651335e2.dir
+      size: 3108
+      nfiles: 3
+  evaluate:
+    cmd: python3 evaluate.py
+    deps:
+    - path: evaluate.py
+      hash: md5
+      md5: 5827bc85d6445ed84a7f7ca15f0a3547
+      size: 1975
+    - path: prepare_data
+      hash: md5
+      md5: 3fea027a50aba52e1d495eddfad47dd4.dir
+      size: 8793
+      nfiles: 6
+    - path: process_data
+      hash: md5
+      md5: 9c1b10a94b88712f482c014d651335e2.dir
+      size: 3108
+      nfiles: 3
+    params:
+      params.yaml:
+        data_prepare.dest_folder: /home/koushik/Documents/BDL_ASSGN_4/prepare_data
+        data_process.dest_folder: /home/koushik/Documents/BDL_ASSGN_4/process_data
+        evaluate.output: /home/koushik/Documents/BDL_ASSGN_4/output
+    outs:
+    - path: output
+      hash: md5
+      md5: 9c00639fd9e18d8230ddf4f6654fdc06.dir
+      size: 257
+      nfiles: 3
